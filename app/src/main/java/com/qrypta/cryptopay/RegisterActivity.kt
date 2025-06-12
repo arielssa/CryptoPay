@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
 import com.qrypta.cryptopay.api.RegisterRequest
 import com.qrypta.cryptopay.api.RegisterResponse
 import com.qrypta.cryptopay.api.RetrofitClient
@@ -20,6 +21,11 @@ class RegisterActivity : AppCompatActivity() {
         binding = ActivityRegisterBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        val toolbar = findViewById<Toolbar>(R.id.registerToolbar)
+        setSupportActionBar(toolbar)
+
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+
         binding.welcomeUserPassButton.setOnClickListener {
             val request = RegisterRequest(
                 full_name = binding.registerFullNameInput.text.toString(),
@@ -29,6 +35,12 @@ class RegisterActivity : AppCompatActivity() {
                 password = binding.registerPasswordInput.text.toString()
             )
             registerUser(request)
+        }
+
+        toolbar.setNavigationOnClickListener {
+            val intent = Intent(this, WelcomeActivity::class.java)
+            startActivity(intent)
+            finish()
         }
     }
 

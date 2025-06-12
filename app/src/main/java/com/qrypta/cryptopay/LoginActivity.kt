@@ -1,5 +1,6 @@
 package com.qrypta.cryptopay
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
@@ -7,6 +8,7 @@ import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
 import com.qrypta.cryptopay.api.LoginRequest
 import com.qrypta.cryptopay.api.LoginResponse
 import com.qrypta.cryptopay.api.RetrofitClient
@@ -18,14 +20,20 @@ class LoginActivity : AppCompatActivity() {
     private lateinit var signInButton: Button
     private lateinit var createAccountTextView: TextView
 
+    @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_login)  // verifica que el nombre del layout sea activity_login.xml
+        setContentView(R.layout.activity_login)
 
         userInput = findViewById(R.id.loginUserInput)
         passwordInput = findViewById(R.id.loginPasswordInput)
         signInButton = findViewById(R.id.loginSignInButton)
         createAccountTextView = findViewById(R.id.createAccountTextView)
+
+        val toolbar = findViewById<Toolbar>(R.id.loginToolbar)
+        setSupportActionBar(toolbar)
+
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         signInButton.setOnClickListener {
             val user = userInput.text.toString()
@@ -43,9 +51,14 @@ class LoginActivity : AppCompatActivity() {
         }
 
         createAccountTextView.setOnClickListener {
-            // Por ejemplo, abrir la pantalla de registro
             val intent = Intent(this, RegisterActivity::class.java)
             startActivity(intent)
+        }
+
+        toolbar.setNavigationOnClickListener {
+            val intent = Intent(this, WelcomeActivity::class.java)
+            startActivity(intent)
+            finish()
         }
     }
 
@@ -57,7 +70,8 @@ class LoginActivity : AppCompatActivity() {
             ) {
                 if (response.isSuccessful) {
                     Toast.makeText(this@LoginActivity, "Login exitoso", Toast.LENGTH_LONG).show()
-                    // Aquí puedes abrir la siguiente pantalla después del login
+                    val intent = Intent(this@LoginActivity, MainActivity::class.java)
+                    startActivity(intent)
                 } else {
                     Toast.makeText(this@LoginActivity, "Error en el login", Toast.LENGTH_LONG).show()
                 }
